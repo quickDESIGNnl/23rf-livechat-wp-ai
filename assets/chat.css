@@ -1,0 +1,6 @@
+#livechat-ai { max-width: 400px; border: 1px solid #ccc; padding: 10px; }
+#livechat-ai .chat-window { height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 5px; margin-bottom: 10px; }
+#livechat-ai .chat-window .user { text-align: right; color: #0a0; }
+#livechat-ai .chat-window .bot { text-align: left; color: #00a; }
+#livechat-ai .chat-window .waiting { text-align: center; color: #999; font-style: italic; }
+#livechat-ai .chat-window .error { text-align: center; color: #c00; }
