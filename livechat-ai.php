@@ -9,13 +9,6 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-require_once __DIR__ . '/vendor/plugin-update-checker/plugin-update-checker.php';
-Puc_v4_Factory::buildUpdateChecker(
-    'https://github.com/<gebruikersnaam>/23rf-livechat-wp-ai',
-    __FILE__,
-    'livechat-ai'
-);
-
 class LiveChatAI {
     const WEBHOOK_URL = 'https://example.com/webhook'; // vervang met jouw webhook
 
@@ -67,5 +60,14 @@ class LiveChatAI {
         wp_send_json_success( [ 'reply' => $body ] );
     }
 }
+
+if ( ! class_exists( 'Puc_v5_Factory', false ) ) {
+    require __DIR__ . '/vendor/plugin-update-checker/plugin-update-checker.php';
+}
+Puc_v5_Factory::buildUpdateChecker(
+    'https://github.com/<username>/23rf-livechat-wp-ai',
+    __FILE__,
+    'livechat-ai'
+);
 
 new LiveChatAI();
