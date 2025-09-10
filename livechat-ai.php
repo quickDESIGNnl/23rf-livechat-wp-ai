@@ -4,9 +4,17 @@
  * Description: Live chat waarmee bezoekers via een webhook met een AI-assistent praten.
  * Version:     1.0.0
  * Author:      Jouw Naam
+ * Update URI: https://github.com/<gebruikersnaam>/23rf-livechat-wp-ai
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
+
+require_once __DIR__ . '/vendor/plugin-update-checker/plugin-update-checker.php';
+Puc_v4_Factory::buildUpdateChecker(
+    'https://github.com/<gebruikersnaam>/23rf-livechat-wp-ai',
+    __FILE__,
+    'livechat-ai'
+);
 
 class LiveChatAI {
     const WEBHOOK_URL = 'https://example.com/webhook'; // vervang met jouw webhook
