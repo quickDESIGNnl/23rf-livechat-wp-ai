@@ -10,13 +10,14 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class LiveChatAI {
-    const WEBHOOK_URL = 'https://example.com/webhook'; // vervang met jouw webhook
 
     public function __construct() {
         add_shortcode( 'livechat_ai', [ $this, 'render_chat' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
         add_action( 'wp_ajax_livechatai_send', [ $this, 'handle_message' ] );
         add_action( 'wp_ajax_nopriv_livechatai_send', [ $this, 'handle_message' ] );
+        add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
+        add_action( 'admin_init', [ $this, 'register_settings' ] );
     }
 
     public function render_chat() {
@@ -46,7 +47,7 @@ class LiveChatAI {
             wp_send_json_error( [ 'error' => 'Leeg bericht' ] );
         }
 
-        $response = wp_remote_post( self::WEBHOOK_URL, [
+        $response = wp_remote_post( $this->get_webhook_url(), [
             'headers' => [ 'Content-Type' => 'application/json' ],
             'body'    => wp_json_encode( [ 'question' => $message ] ),
             'timeout' => 60,
@@ -58,6 +59,59 @@ class LiveChatAI {
 
         $body = wp_remote_retrieve_body( $response );
         wp_send_json_success( [ 'reply' => $body ] );
+    }
+
+    private function get_webhook_url() {
+        return get_option( 'livechatai_webhook', 'https://example.com/webhook' );
+    }
+
+    public function add_settings_page() {
+        add_options_page(
+            'LiveChat AI',
+            'LiveChat AI',
+            'manage_options',
+            'livechatai',
+            [ $this, 'settings_page_html' ]
+        );
+    }
+
+    public function register_settings() {
+        register_setting( 'livechatai', 'livechatai_webhook', [ 'sanitize_callback' => 'esc_url_raw' ] );
+
+        add_settings_section(
+            'livechatai_section',
+            '',
+            null,
+            'livechatai'
+        );
+
+        add_settings_field(
+            'livechatai_webhook',
+            'Webhook URL',
+            [ $this, 'webhook_field_html' ],
+            'livechatai',
+            'livechatai_section'
+        );
+    }
+
+    public function webhook_field_html() {
+        $value = get_option( 'livechatai_webhook', 'https://example.com/webhook' );
+        echo '<input type="text" name="livechatai_webhook" value="' . esc_attr( $value ) . '" class="regular-text" />';
+    }
+
+    public function settings_page_html() {
+        ?>
+        <div class="wrap">
+            <h1>LiveChat AI</h1>
+            <form method="post" action="options.php">
+                <?php
+                settings_fields( 'livechatai' );
+                do_settings_sections( 'livechatai' );
+                submit_button();
+                ?>
+            </form>
+        </div>
+        <?php
     }
 }
 
