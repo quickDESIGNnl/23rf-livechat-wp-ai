@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LiveChat AI
  * Description: Live chat waarmee bezoekers via een webhook met een AI-assistent praten.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      Jouw Naam
  * Update URI: https://github.com/<gebruikersnaam>/23rf-livechat-wp-ai
  */
@@ -34,8 +34,8 @@ class LiveChatAI {
 
     public function enqueue_assets() {
         $base = plugin_dir_url( __FILE__ );
-        wp_enqueue_style( 'livechat-ai', $base . 'assets/chat.css', [], '1.0.0' );
-        wp_enqueue_script( 'livechat-ai', $base . 'assets/chat.js', [ 'jquery' ], '1.0.0', true );
+        wp_enqueue_style( 'livechat-ai', $base . 'assets/chat.css', [], '1.0.1' );
+        wp_enqueue_script( 'livechat-ai', $base . 'assets/chat.js', [ 'jquery' ], '1.0.1', true );
         wp_localize_script( 'livechat-ai', 'LiveChatAI', [
             'ajaxUrl' => admin_url( 'admin-ajax.php' ),
         ] );
